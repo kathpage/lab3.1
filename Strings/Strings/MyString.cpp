@@ -25,6 +25,9 @@ MyString::MyString(const MyString& _string)
 }
 
 MyString& MyString::operator = (const MyString& rightString) {
+	if (*this == rightString) {
+		return *this;
+	}
 	if (length != rightString.length) {
 		delete[] str;
 		str = new char[rightString.length + 1];
@@ -69,16 +72,7 @@ bool MyString::operator == (const MyString& rightString) const
 
 bool MyString::operator != (const MyString& rightString) const 
 {
-	if (length != rightString.length) {
-		return 1;
-	}
-	else {
-		if (strcmp(str, rightString.str) == 1) {
-			return 1;
-		}
-	}
-	
-	return 0;
+	return !(*this == rightString);
 }
 
 MyString& MyString::operator += (const MyString& rightString)
@@ -117,32 +111,22 @@ MyString& MyString::operator += (const char rightChar)
 
 const MyString MyString::operator + (const MyString& rightString) const
 {
-	MyString a;
-	a.str = new char[length + rightString.length + 1];
-	strcpy(a.str, str);
-	strcat(a.str, rightString.str);
-	a.length =length + rightString.length;
+	MyString a(*this);
+	a += rightString;
 	return a;
 }
 
 const MyString MyString::operator + (const char* rightString) const
 {
-	MyString a;
-	a.str = new char[length + strlen(rightString) + 1];
-	strcpy(a.str, str);
-	strcat(a.str, rightString);
-	a.length = length + strlen(rightString);
+	MyString a(*this);
+	a += rightString;
 	return a;
 }
 
 const MyString MyString::operator + (const char rightChar) const
 {
-	MyString a;
-	a.str = new char[length + 2];
-	strcpy(a.str, str);
-	a.str[length] = rightChar;
-	a.str[length + 1] = '\0';
-	a.length = length + 1;
+	MyString a(*this);
+	a += rightChar;
 	return a;
 }
 
